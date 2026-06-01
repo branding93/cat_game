@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es-419">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tamagotchi de gatos: David y Solom</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <div>
@@ -17,29 +19,32 @@
             <button id="btn-fast" onclick="setSpeed(10)">⏩ Rápido</button>
         </div>
     </header>
-    <div class="dashboard">            
+    <div class="dashboard">
         <div class="panel">
-            <h2>🏠 Hogar</h2>                
+            <h2>🏠 Hogar</h2>
             <div class="household-item">
                 <div>
                     <strong>Dispensador de comida</strong><br>
                     <span id="ui-feeder">8</span>/8 porciones
                 </div>
-                <button class="action-btn" onclick="haushalt.feeder = 8; log('Dispensador rellenado.'); updateUI();">Rellenar</button>
+                <button class="action-btn"
+                    onclick="haushalt.feeder = 8; log('Dispensador rellenado.'); updateUI();">Rellenar</button>
             </div>
             <div class="household-item">
                 <div style="width: 100%;">
                     <div class="stat-label"><span>Fuente de agua</span> <span id="ui-water-val">100%</span></div>
                     <progress id="ui-water" value="100" max="100"></progress>
                 </div>
-                <button class="action-btn" style="margin-left: 10px;" onclick="haushalt.water = 100; log('Fuente rellenada.'); updateUI();">Rellenar</button>
+                <button class="action-btn" style="margin-left: 10px;"
+                    onclick="haushalt.water = 100; log('Fuente rellenada.'); updateUI();">Rellenar</button>
             </div>
             <div class="household-item">
                 <div style="width: 100%;">
                     <div class="stat-label"><span>Suciedad del arenero</span> <span id="ui-litter-val">0%</span></div>
                     <progress id="ui-litter" value="0" max="100" class="warning"></progress>
                 </div>
-                <button class="action-btn" style="margin-left: 10px;" onclick="haushalt.litter = 0; log('Areneros limpiados.'); updateUI();">Limpiar</button>
+                <button class="action-btn" style="margin-left: 10px;"
+                    onclick="haushalt.litter = 0; log('Areneros limpiados.'); updateUI();">Limpiar</button>
             </div>
             <div class="household-item">
                 <div>
@@ -54,15 +59,15 @@
             </div>
         </div>
         <div class="panel room-display">
-            <h2>🛋️ La habitación</h2>                
+            <h2>🛋️ La habitación</h2>
             <div class="cat-visual" id="visual-david">
-                <h3 style="color: var(--david)">David (En el suelo)</h3>
+                <h3 style="color: var(--david)">David</h3>
                 <div class="cat-sprite" id="sprite-david">🐈</div>
                 <div id="status-david">Durmiendo tranquilamente...</div>
                 <div style="margin-top: 10px; font-size: 0.9rem;">Peso: <span id="weight-david">5.0</span> kg</div>
             </div>
             <div class="cat-visual" id="visual-solom">
-                <h3 style="color: var(--solom)">Solom (En el regazo)</h3>
+                <h3 style="color: var(--solom)">Solom</h3>
                 <div class="cat-sprite" id="sprite-solom">🐈‍⬛</div>
                 <div id="status-solom">Te está observando...</div>
                 <div style="margin-top: 10px; font-size: 0.9rem;">Peso: <span id="weight-solom">4.0</span> kg</div>
@@ -70,13 +75,17 @@
             <div id="log">¡Bienvenido al simulador de gatos!</div>
         </div>
         <div class="panel">
-            <h2>🐈 Interacciones</h2>                
+            <h2>🐈 Interacciones</h2>
             <h3 style="color: var(--david)">David</h3>
             <div class="stat-group">
-                <div class="stat-label"><span>Energía</span> <progress id="e-david" value="100" max="100" style="width: 70%;"></progress></div>
-                <div class="stat-label"><span>Hambre</span> <progress id="h-david" value="100" max="100" style="width: 70%;"></progress></div>
-                <div class="stat-label"><span>Ánimo</span> <progress id="m-david" value="100" max="100" style="width: 70%;"></progress></div>
-                <div class="stat-label"><span>Cuidado del pelaje</span> <progress id="f-david" value="100" max="100" style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Energía</span> <progress id="e-david" value="100" max="100"
+                        style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Hambre</span> <progress id="h-david" value="100" max="100"
+                        style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Ánimo</span> <progress id="m-david" value="100" max="100"
+                        style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Cuidado del pelaje</span> <progress id="f-david" value="100" max="100"
+                        style="width: 70%;"></progress></div>
             </div>
             <div class="btn-group">
                 <button class="action-btn" onclick="feedCat('david', 'trocken')">Comida seca</button>
@@ -87,10 +96,14 @@
             <hr style="border:1px solid #444; margin: 15px 0;">
             <h3 style="color: var(--solom)">Solom</h3>
             <div class="stat-group">
-                <div class="stat-label"><span>Energía</span> <progress id="e-solom" value="100" max="100" style="width: 70%;"></progress></div>
-                <div class="stat-label"><span>Hambre</span> <progress id="h-solom" value="100" max="100" style="width: 70%;"></progress></div>
-                <div class="stat-label"><span>Ánimo</span> <progress id="m-solom" value="100" max="100" style="width: 70%;"></progress></div>
-                <div class="stat-label"><span>Cuidado del pelaje</span> <progress id="f-solom" value="100" max="100" style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Energía</span> <progress id="e-solom" value="100" max="100"
+                        style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Hambre</span> <progress id="h-solom" value="100" max="100"
+                        style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Ánimo</span> <progress id="m-solom" value="100" max="100"
+                        style="width: 70%;"></progress></div>
+                <div class="stat-label"><span>Cuidado del pelaje</span> <progress id="f-solom" value="100" max="100"
+                        style="width: 70%;"></progress></div>
             </div>
             <div class="btn-group">
                 <button class="action-btn" onclick="feedCat('solom', 'trocken')">Comida seca</button>
@@ -100,7 +113,8 @@
             </div>
             <hr style="border:1px solid #444; margin: 15px 0;">
             <h3>🧶 Juguetes (Inventario)</h3>
-            <select id="toy-select" style="width: 100%; padding: 5px; margin-bottom: 5px; background: #222; color: #fff; border: 1px solid #444;">
+            <select id="toy-select"
+                style="width: 100%; padding: 5px; margin-bottom: 5px; background: #222; color: #fff; border: 1px solid #444;">
                 <option value="band">Cinta larga (Estándar)</option>
                 <option value="baldrian">Peluche con valeriana</option>
                 <option value="stab">Varita con cinta</option>
@@ -118,4 +132,5 @@
     </div>
     <script src="app.js" defer></script>
 </body>
+
 </html>
