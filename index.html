@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
         <div>
             <h2>🕰️ Tag <span id="ui-day">1</span> - <span id="ui-time">08:00</span></h2>
@@ -18,12 +17,9 @@
             <button id="btn-fast" onclick="setSpeed(10)">⏩ Schnell</button>
         </div>
     </header>
-
-    <div class="dashboard">
-        
+    <div class="dashboard">          
         <div class="panel">
-            <h2>🏠 Haushalt</h2>
-            
+            <h2>🏠 Haushalt</h2>              
             <div class="household-item">
                 <div>
                     <strong>Futterautomat</strong><br>
@@ -31,7 +27,6 @@
                 </div>
                 <button class="action-btn" onclick="haushalt.feeder = 8; log('Automat aufgefüllt.'); updateUI();">Nachfüllen</button>
             </div>
-
             <div class="household-item">
                 <div style="width: 100%;">
                     <div class="stat-label"><span>Trinkbrunnen</span> <span id="ui-water-val">100%</span></div>
@@ -39,7 +34,6 @@
                 </div>
                 <button class="action-btn" style="margin-left: 10px;" onclick="haushalt.water = 100; log('Brunnen gefüllt.'); updateUI();">Auffüllen</button>
             </div>
-
             <div class="household-item">
                 <div style="width: 100%;">
                     <div class="stat-label"><span>Klo Schmutz</span> <span id="ui-litter-val">0%</span></div>
@@ -47,7 +41,6 @@
                 </div>
                 <button class="action-btn" style="margin-left: 10px;" onclick="haushalt.litter = 0; log('Klos geputzt.'); updateUI();">Putzen</button>
             </div>
-
             <div class="household-item">
                 <div>
                     <strong>Sofa-Decke</strong><br>
@@ -60,30 +53,24 @@
                 <progress id="ui-sofa" value="100" max="100"></progress>
             </div>
         </div>
-
         <div class="panel room-display">
-            <h2>🛋️ Das Zimmer</h2>
-            
+            <h2>🛋️ Das Zimmer</h2>              
             <div class="cat-visual" id="visual-david">
                 <h3 style="color: var(--david)">David (Auf dem Boden)</h3>
                 <div class="cat-sprite" id="sprite-david">🐈</div>
                 <div id="status-david">Schläft faul...</div>
                 <div style="margin-top: 10px; font-size: 0.9rem;">Gewicht: <span id="weight-david">5.0</span> kg</div>
             </div>
-
             <div class="cat-visual" id="visual-solom">
                 <h3 style="color: var(--solom)">Solom (Auf dem Schoß)</h3>
                 <div class="cat-sprite" id="sprite-solom">🐈‍⬛</div>
                 <div id="status-solom">Beobachtet dich...</div>
                 <div style="margin-top: 10px; font-size: 0.9rem;">Gewicht: <span id="weight-solom">4.0</span> kg</div>
             </div>
-
             <div id="log">Willkommen im Katzen-Simulator!</div>
         </div>
-
         <div class="panel">
-            <h2>🐈 Interaktionen</h2>
-            
+            <h2>🐈 Interaktionen</h2>              
             <h3 style="color: var(--david)">David</h3>
             <div class="stat-group">
                 <div class="stat-label"><span>Energie</span> <progress id="e-david" value="100" max="100" style="width: 70%;"></progress></div>
@@ -97,9 +84,7 @@
                 <button class="action-btn" onclick="groomCat('david')">Kämmen</button>
                 <button class="action-btn" onclick="petCat('david')">In Hand kuscheln</button>
             </div>
-
             <hr style="border:1px solid #444; margin: 15px 0;">
-
             <h3 style="color: var(--solom)">Solom</h3>
             <div class="stat-group">
                 <div class="stat-label"><span>Energie</span> <progress id="e-solom" value="100" max="100" style="width: 70%;"></progress></div>
@@ -111,10 +96,9 @@
                 <button class="action-btn" onclick="feedCat('solom', 'trocken')">Trockenfutter</button>
                 <button class="action-btn" onclick="feedCat('solom', 'nass')">Nassfutter</button>
                 <button class="action-btn" onclick="groomCat('solom')">Kämmen</button>
+                <button class="action-btn" onclick="petCat('solom')">Auf Schoß rufen</button>
             </div>
-
             <hr style="border:1px solid #444; margin: 15px 0;">
-
             <h3>🧶 Spielzeuge (Inventar)</h3>
             <select id="toy-select" style="width: 100%; padding: 5px; margin-bottom: 5px; background: #222; color: #fff; border: 1px solid #444;">
                 <option value="band">Langes Band (Standard)</option>
@@ -130,10 +114,8 @@
                 <button class="action-btn" onclick="playWith('david')">Mit David spielen</button>
                 <button class="action-btn" onclick="playWith('solom')">Mit Solom spielen</button>
             </div>
-
         </div>
     </div>
-
     <script src="app.js" defer></script>
 </body>
 </html>

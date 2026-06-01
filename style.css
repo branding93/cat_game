@@ -1,136 +1,120 @@
-:root {
-    --bg: #1e1e2e;
-    --surface: #313244;
-    --text: #cdd6f4;
-    --accent: #cba6f7;
-    --accent-hover: #b4befe;
-    --danger: #f38ba8;
-    --success: #a6e3a1;
-    --david: #f9e2af;
-    --solom: #89b4fa;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    box-sizing: border-box;
-}
-
-/* Header / Zeitsteuerung */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--surface);
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-.time-controls button {
-    background: var(--accent);
-    border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #111;
-    margin-left: 5px;
-}
-
-.time-controls button:hover { background: var(--accent-hover); }
-.time-controls button.active { border: 2px solid #fff; }
-
-/* Main Layout */
-.dashboard {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1.5fr;
-    gap: 20px;
-    flex-grow: 1;
-}
-
-.panel {
-    background: var(--surface);
-    border-radius: 12px;
-    padding: 20px;
-    overflow-y: auto;
-}
-
-h2 { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
-h3 { font-size: 1rem; margin-bottom: 5px; }
-
-/* Room / Visuals */
-.room-display {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.cat-visual {
-    background: rgba(0,0,0,0.2);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    border-left: 5px solid;
-}
-
-#visual-david { border-color: var(--david); }
-#visual-solom { border-color: var(--solom); }
-
-.cat-sprite { font-size: 4rem; margin: 10px 0; }
-
-/* Stats & Bars */
-.stat-group { margin-bottom: 10px; }
-.stat-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px; }
-
-progress {
-    width: 100%;
-    height: 10px;
-    border-radius: 5px;
-    appearance: none;
-}
-progress::-webkit-progress-bar { background-color: #111; border-radius: 5px; }
-progress::-webkit-progress-value { background-color: var(--success); border-radius: 5px; }
-progress.warning::-webkit-progress-value { background-color: var(--danger); }
-
-/* Buttons */
-.btn-group { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-.action-btn {
-    background: var(--accent);
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    color: #111;
-    flex-grow: 1;
-}
-.action-btn:hover { background: var(--accent-hover); }
-
-.household-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0,0,0,0.2);
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-#log {
-    margin-top: 20px;
-    background: #111;
-    padding: 10px;
-    border-radius: 8px;
-    height: 100px;
-    overflow-y: auto;
-    font-family: monospace;
-    font-size: 0.85rem;
-    color: #aaa;
+:root {  
+    --bg: #1e1e2e;  
+    --surface: #313244;  
+    --text: #cdd6f4;  
+    --accent: #cba6f7;  
+    --accent-hover: #b4befe;  
+    --danger: #f38ba8;  
+    --success: #a6e3a1;  
+    --david: #f9e2af;  
+    --solom: #89b4fa;  
+}  
+body {  
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
+    background-color: var(--bg);  
+    color: var(--text);  
+    margin: 0;  
+    padding: 20px;  
+    display: flex;  
+    flex-direction: column;  
+    height: 100vh;  
+    box-sizing: border-box;  
+}  
+/* Header / Zeitsteuerung */  
+header {  
+    display: flex;  
+    justify-content: space-between;  
+    align-items: center;  
+    background: var(--surface);  
+    padding: 15px 20px;  
+    border-radius: 12px;  
+    margin-bottom: 20px;  
+}  
+.time-controls button {  
+    background: var(--accent);  
+    border: none;  
+    padding: 8px 15px;  
+    border-radius: 6px;  
+    cursor: pointer;  
+    font-weight: bold;  
+    color: #111;  
+    margin-left: 5px;  
+}  
+.time-controls button:hover { background: var(--accent-hover); }  
+.time-controls button.active { border: 2px solid #fff; }  
+/* Main Layout */  
+.dashboard {  
+    display: grid;  
+    grid-template-columns: 1fr 2fr 1.5fr;  
+    gap: 20px;  
+    flex-grow: 1;  
+}  
+.panel {  
+    background: var(--surface);  
+    border-radius: 12px;  
+    padding: 20px;  
+    overflow-y: auto;  
+}  
+h2 { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid var(--accent); padding-bottom: 5px; }  
+h3 { font-size: 1rem; margin-bottom: 5px; }  
+/* Room / Visuals */  
+.room-display {  
+    display: flex;  
+    flex-direction: column;  
+    gap: 15px;  
+}  
+.cat-visual {  
+    background: rgba(0,0,0,0.2);  
+    border-radius: 12px;  
+    padding: 20px;  
+    text-align: center;  
+    border-left: 5px solid;  
+}  
+#visual-david { border-color: var(--david); }  
+#visual-solom { border-color: var(--solom); }  
+.cat-sprite { font-size: 4rem; margin: 10px 0; }  
+/* Stats & Bars */  
+.stat-group { margin-bottom: 10px; }  
+.stat-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px; }  
+progress {  
+    width: 100%;  
+    height: 10px;  
+    border-radius: 5px;  
+    appearance: none;  
+}  
+progress::-webkit-progress-bar { background-color: #111; border-radius: 5px; }  
+progress::-webkit-progress-value { background-color: var(--success); border-radius: 5px; }  
+progress.warning::-webkit-progress-value { background-color: var(--danger); }  
+/* Buttons */  
+.btn-group { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }  
+.action-btn {  
+    background: var(--accent);  
+    border: none;  
+    padding: 6px 10px;  
+    border-radius: 4px;  
+    cursor: pointer;  
+    font-size: 0.8rem;  
+    color: #111;  
+    flex-grow: 1;  
+}  
+.action-btn:hover { background: var(--accent-hover); }  
+.household-item {  
+    display: flex;  
+    justify-content: space-between;  
+    align-items: center;  
+    background: rgba(0,0,0,0.2);  
+    padding: 10px;  
+    border-radius: 8px;  
+    margin-bottom: 10px;  
+}  
+#log {  
+    margin-top: 20px;  
+    background: #111;  
+    padding: 10px;  
+    border-radius: 8px;  
+    height: 100px;  
+    overflow-y: auto;  
+    font-family: monospace;  
+    font-size: 0.85rem;  
+    color: #aaa;  
 }
