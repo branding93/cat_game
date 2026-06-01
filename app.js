@@ -20,12 +20,14 @@ const cats = {
     david: {
         name: "David",
         energy: 100, hunger: 100, mood: 100, fell: 100, weight: 5.0, activity: 0,
-        baseWeight: 5.0, isSleeping: true, playChance: 0.2
+        baseWeight: 5.0, isSleeping: true, playChance: 0.2,
+        visualState: null, visualStateUntil: 0
     },
     solom: {
         name: "Solom",
         energy: 100, hunger: 100, mood: 100, fell: 100, weight: 4.0, activity: 0,
-        baseWeight: 4.0, isSleeping: false, playChance: 0.9, claws: 100
+        baseWeight: 4.0, isSleeping: false, playChance: 0.9, claws: 100,
+        visualState: null, visualStateUntil: 0
     }
 };
 
@@ -175,17 +177,58 @@ function playWith(id) {
     c.isSleeping = false;
 
     if (id === 'david') {
-        if (toy === 'karton') { success = true; log("David springt in den Karton. Nur die Augen gucken raus!"); c.mood = 100; }
-        else if (toy === 'kaefer') { success = true; log("David schaut dem Käfer zu. Er bewegt sich kaum, aber ist animiert."); c.activity += 20; }
-        else if (Math.random() < c.playChance) { success = true; log("Unglaublich! David spielt kurz mit."); c.activity += 50; c.energy -= 20; }
-        else { log("David gähnt und ignoriert das Spielzeug."); c.mood -= 5; }
+        if (toy === 'karton') {
+            success = true;
+            log("David springt in den Karton. Nur die Augen gucken raus!");
+            c.mood = 100;
+            setTemporaryVisualState('david', 'karton', 3500);
+        }
+        else if (toy === 'kaefer') {
+            success = true;
+            log("David schaut dem Käfer zu. Er bewegt sich kaum, aber ist animiert.");
+            c.activity += 20;
+            setTemporaryVisualState('david', 'spielt', 2500);
+        }
+        else if (Math.random() < c.playChance) {
+            success = true;
+            log("Unglaublich! David spielt kurz mit.");
+            c.activity += 50;
+            c.energy -= 20;
+            setTemporaryVisualState('david', 'spielt', 2500);
+        }
+        else {
+            log("David gähnt und ignoriert das Spielzeug.");
+            c.mood -= 5;
+        }
     } 
     
     if (id === 'solom') {
-        if (toy === 'laser') { success = true; log("Solom flitzt wie verrückt dem Laser hinterher!"); c.activity += 80; c.energy -= 40; }
-        else if (toy === 'stab') { success = true; log("Solom springt nach dem Stab!"); c.activity += 50; c.energy -= 20; }
-        else if (toy === 'minze') { success = true; log("Solom ist am Kratzbaum beschäftigt."); haushalt.scratchPost -= 10; }
-        else { success = true; log("Solom spielt fröhlich."); c.activity += 30; }
+        if (toy === 'laser') {
+            success = true;
+            log("Solom flitzt wie verrückt dem Laser hinterher!");
+            c.activity += 80;
+            c.energy -= 40;
+            setTemporaryVisualState('solom', 'spielt', 2500);
+        }
+        else if (toy === 'stab') {
+            success = true;
+            log("Solom springt nach dem Stab!");
+            c.activity += 50;
+            c.energy -= 20;
+            setTemporaryVisualState('solom', 'spielt', 2500);
+        }
+        else if (toy === 'minze') {
+            success = true;
+            log("Solom ist am Kratzbaum beschäftigt.");
+            haushalt.scratchPost -= 10;
+            setTemporaryVisualState('solom', 'spielt', 2500);
+        }
+        else {
+            success = true;
+            log("Solom spielt fröhlich.");
+            c.activity += 30;
+            setTemporaryVisualState('solom', 'spielt', 2500);
+        }
     }
 
     if (toy === 'baldrian' && success) {
@@ -196,9 +239,46 @@ function playWith(id) {
     if (toy === 'laser' && id === 'solom') {
         log("David guckt genervt beim Laser-Spiel zu...");
         cats.david.mood = Math.max(0, cats.david.mood - 15);
+        setTemporaryVisualState('david', 'sauer', 2500);
     }
 
     updateUI();
+}
+
+
+function setTemporaryVisualState(id, state, durationMs) {
+    cats[id].visualState = state;
+    cats[id].visualStateUntil = Date.now() + durationMs;
+}
+
+function getVisualState(id) {
+    const c = cats[id];
+    if (c.visualState && c.visualStateUntil > Date.now()) return c.visualState;
+    c.visualState = null;
+    c.visualStateUntil = 0;
+
+    if (c.isSleeping) return 'schlaeft';
+    if (c.hunger < 30) return 'hungrig';
+    if (c.mood < 30) return 'sauer';
+    if (id === 'solom' && (game.hour >= 22 || game.hour < 5) && !c.isSleeping) return 'zoomies';
+    return 'idle';
+}
+
+function renderCatSprite(id, visualState, fallbackEmoji) {
+    const spriteEl = document.getElementById(`sprite-${id}`);
+    const imagePath = `pics/${id}_${visualState}.png`;
+    spriteEl.dataset.expectedSrc = imagePath;
+
+    const testImage = new Image();
+    testImage.onload = function() {
+        if (spriteEl.dataset.expectedSrc !== imagePath) return;
+        spriteEl.innerHTML = `<img src="${imagePath}" alt="${cats[id].name}" style="background: transparent; max-width: 100%; max-height: 96px; width: auto; height: auto; display: inline-block;" />`;
+    };
+    testImage.onerror = function() {
+        if (spriteEl.dataset.expectedSrc !== imagePath) return;
+        spriteEl.textContent = fallbackEmoji;
+    };
+    testImage.src = imagePath;
 }
 
 // --- 6. UI UPDATE & LOGGING ---
@@ -244,41 +324,24 @@ function updateUI() {
         // Sprite / Text Logic
         let statusText = c.isSleeping ? "Schläft tief und fest 💤" : "Ist wach und schaut sich um 👀";
         let sprite = c.isSleeping ? (id==='david'? '😴' : '💤') : (id==='david'? '🐈' : '🐈‍⬛');
-        let imageState = c.isSleeping ? 'sleep' : 'idle';
+        const visualState = getVisualState(id);
         
         if (c.hunger < 30) {
             statusText = "Miaut laut vor Hunger! 😾";
             sprite = '🙀';
-            imageState = 'hungry';
         }
         else if (c.mood < 30) {
             statusText = "Ist schlecht gelaunt.";
             sprite = '😾';
-            imageState = 'angry';
         }
         
         if(id === 'solom' && (game.hour >= 22 || game.hour < 5) && !c.isSleeping) {
             statusText = "Nachtaktiv! Zoomies! ⚡";
             sprite = '🐆';
-            imageState = 'zoomies';
         }
 
         document.getElementById(`status-${id}`).innerText = statusText;
-
-        const spriteEl = document.getElementById(`sprite-${id}`);
-        const imagePath = `pics/${id}_${imageState}.png`;
-        spriteEl.dataset.expectedSrc = imagePath;
-
-        const testImage = new Image();
-        testImage.onload = function() {
-            if (spriteEl.dataset.expectedSrc !== imagePath) return;
-            spriteEl.innerHTML = `<img src="${imagePath}" alt="${c.name}" style="max-width: 100%; max-height: 96px; width: auto; height: auto; display: inline-block;" />`;
-        };
-        testImage.onerror = function() {
-            if (spriteEl.dataset.expectedSrc !== imagePath) return;
-            spriteEl.innerText = sprite;
-        };
-        testImage.src = imagePath;
+        renderCatSprite(id, visualState, sprite);
     });
 }
 
