@@ -69,7 +69,7 @@ function onTick() {
     // Zerstörung Sofa
     if (isNight && cats.solom.energy > 50 && !haushalt.blanketOn) {
         haushalt.sofaHealth = Math.max(0, haushalt.sofaHealth - 0.2);
-        if (Math.random() < 0.05) log("⚠️ Solom kratzt am ungeschützten Sofa!");
+        if (Math.random() < 0.05) log("⚠️ ¡Solom está arañando el sofá sin protección!");
     }
 }
 function updateCatNeeds(id, energyDrain, hungerDrain) {
@@ -127,9 +127,9 @@ function onHourChange() {
             cats.solom.hunger = Math.min(100, cats.solom.hunger + 40);
             applyWeightGainFromOvereating('david', davidHungerBeforeEating);
             applyWeightGainFromOvereating('solom', solomHungerBeforeEating);
-            log(`Automat hat gefüttert! (Noch ${haushalt.feeder} Portionen)`);
+            log(`¡El dispensador dio comida! (Quedan ${haushalt.feeder} porciones)`);
         } else {
-            log("⚠️ Futterautomat ist leer!");
+            log("⚠️ ¡El dispensador de comida está vacío!");
             cats.david.mood = Math.max(0, cats.david.mood - 20);
             cats.solom.mood = Math.max(0, cats.solom.mood - 20);
         }
@@ -138,7 +138,7 @@ function onHourChange() {
 // --- 5. INTERAKTIONEN ---
 function feedCat(id, type) {
     if (id === 'david' && type === 'nass') {
-        log("David schnuppert am Nassfutter und dreht sich angewidert weg.");
+        log("David huele la comida húmeda y se da la vuelta con cara de desagrado.");
         cats.david.mood = Math.max(0, cats.david.mood - 10);
     } else {
         const hungerBeforeEating = cats[id].hunger;
@@ -146,33 +146,33 @@ function feedCat(id, type) {
         cats[id].isSleeping = false;
         haushalt.litter = Math.min(100, haushalt.litter + 2); // Fressen macht voll
         applyWeightGainFromOvereating(id, hungerBeforeEating);
-        log(`${cats[id].name} hat ${type}futter gefressen.`);
+        log(`${cats[id].name} comió alimento ${type === 'trocken' ? 'seco' : 'húmedo'}.`);
     }
     updateUI();
 }
 function groomCat(id) {
-    if (cats[id].fell < 50) log(`${cats[id].name}s Fell war verfilzt. Das Kämmen hat lange gedauert.`);
+    if (cats[id].fell < 50) log(`El pelaje de ${cats[id].name} estaba enredado. Cepillarlo tomó bastante tiempo.`);
     cats[id].fell = 100;
     cats[id].mood = Math.min(100, cats[id].mood + 10);
-    log(`${cats[id].name} wurde gebürstet.`);
+    log(`${cats[id].name} fue cepillado.`);
     updateUI();
 }
 function petCat(id) {
     if (id === 'david') {
         cats.david.mood = 100;
         cats.david.isSleeping = false;
-        log("David kuschelt sich glücklich in deine Hand. Schnurr...");
+        log("David se acurruca feliz en tu mano. Prrr...");
     }
     if (id === 'solom') {
         cats.solom.mood = 100;
         cats.solom.isSleeping = false;
-        log("Solom kommt herüber, setzt sich auf deine Beine und kuschelt auf deinem Schoß. Schnurr...");
+        log("Solom se acerca, se sienta sobre tus piernas y se acurruca en tu regazo. Prrr...");
     }
     updateUI();
 }
 function toggleBlanket() {
     haushalt.blanketOn = !haushalt.blanketOn;
-    log(`Decke ist jetzt ${haushalt.blanketOn ? 'AUF' : 'NEBEN'} dem Sofa.`);
+    log(`La manta ahora está ${haushalt.blanketOn ? 'SOBRE' : 'FUERA DE'} el sofá.`);
     updateUI();
 }
 function playWith(id) {
@@ -180,81 +180,76 @@ function playWith(id) {
     let success = false;
     let c = cats[id];
     c.isSleeping = false;
-
     if (id === 'david') {
         if (toy === 'karton') {
             success = true;
-            log("David springt in den Karton. Nur die Augen gucken raus!");
+            log("David salta dentro de la caja. ¡Solo se le ven los ojos!");
             c.mood = 100;
             handlePlayEffects('david', 8);
             setTemporaryVisualState('david', 'karton', 3500);
         }
         else if (toy === 'kaefer') {
             success = true;
-            log("David schaut dem Käfer zu. Er bewegt sich kaum, aber ist animiert.");
+            log("David observa el escarabajo. Casi no se mueve, pero está entretenido.");
             c.activity += 20;
             handlePlayEffects('david', 10);
             setTemporaryVisualState('david', 'spielt', 2500);
         }
         else if (Math.random() < c.playChance) {
             success = true;
-            log("Unglaublich! David spielt kurz mit.");
+            log("¡Increíble! David juega un rato.");
             c.activity += 50;
             handlePlayEffects('david', 20);
             setTemporaryVisualState('david', 'spielt', 2500);
         }
         else {
-            log("David gähnt und ignoriert das Spielzeug.");
+            log("David bosteza e ignora el juguete.");
             c.mood = Math.max(0, c.mood - 5);
         }
     }
-
     if (id === 'solom') {
         if (toy === 'laser') {
             success = true;
-            log("Solom flitzt wie verrückt dem Laser hinterher!");
+            log("¡Solom corre detrás del láser como loco!");
             c.activity += 80;
             handlePlayEffects('solom', 40);
             setTemporaryVisualState('solom', 'spielt', 2500);
         }
         else if (toy === 'stab') {
             success = true;
-            log("Solom springt nach dem Stab!");
+            log("¡Solom salta hacia la varita!");
             c.activity += 50;
             handlePlayEffects('solom', 20);
             setTemporaryVisualState('solom', 'spielt', 2500);
         }
         else if (toy === 'minze') {
             success = true;
-            log("Solom ist am Kratzbaum beschäftigt.");
+            log("Solom está ocupado en el rascador.");
             haushalt.scratchPost = Math.max(0, haushalt.scratchPost - 10);
             handlePlayEffects('solom', 12);
             setTemporaryVisualState('solom', 'spielt', 2500);
         }
         else {
             success = true;
-            log("Solom spielt fröhlich.");
+            log("Solom juega feliz.");
             c.activity += 30;
             handlePlayEffects('solom', 15);
             setTemporaryVisualState('solom', 'spielt', 2500);
         }
     }
-
     if (toy === 'baldrian' && success) {
         c.mood = 100;
         setTimeout(() => {
             c.isSleeping = true;
-            log(`${c.name} ist vom Baldrian eingeschlafen.`);
+            log(`${c.name} se quedó dormido por la valeriana.`);
             updateUI();
         }, 2000);
     }
-
     if (toy === 'laser' && id === 'solom') {
-        log("David guckt genervt beim Laser-Spiel zu...");
+        log("David mira el juego con láser con cara de fastidio...");
         cats.david.mood = Math.max(0, cats.david.mood - 15);
         setTemporaryVisualState('david', 'sauer', 2500);
     }
-
     updateUI();
 }
 function setTemporaryVisualState(id, state, durationMs) {
@@ -309,7 +304,7 @@ function updateUI() {
     document.getElementById('ui-litter-val').innerText = Math.round(haushalt.litter) + '%';
     document.getElementById('ui-sofa').value = haushalt.sofaHealth;
     document.getElementById('ui-sofa-val').innerText = Math.round(haushalt.sofaHealth) + '%';
-    document.getElementById('ui-blanket').innerText = haushalt.blanketOn ? "LIEGT (Sicher)" : "FEHLT (Gefahr!)";
+    document.getElementById('ui-blanket').innerText = haushalt.blanketOn ? "COLOCADA (Seguro)" : "NO ESTÁ (¡Peligro!)";
     document.getElementById('ui-blanket').style.color = haushalt.blanketOn ? "var(--success)" : "var(--danger)";
     // Katzen Stats & Visuals
     ['david', 'solom'].forEach(id => {
@@ -320,19 +315,19 @@ function updateUI() {
         document.getElementById(`f-${id}`).value = c.fell;
         document.getElementById(`weight-${id}`).innerText = c.weight.toFixed(2);
         // Sprite / Text Logic
-        let statusText = c.isSleeping ? "Schläft tief und fest 💤" : "Ist wach und schaut sich um 👀";
+        let statusText = c.isSleeping ? "Duerme profundamente 💤" : "Está despierto y mirando alrededor 👀";
         let sprite = c.isSleeping ? (id==='david' ? '😴' : '💤') : (id==='david' ? '🐈' : '🐈‍⬛');
         const visualState = getVisualState(id);
         if (c.hunger < 30) {
-            statusText = "Miaut laut vor Hunger! 😾";
+            statusText = "¡Maúlla fuerte por hambre! 😾";
             sprite = '🙀';
         }
         else if (c.mood < 30) {
-            statusText = "Ist schlecht gelaunt.";
+            statusText = "Está de mal humor.";
             sprite = '😾';
         }
         if(id === 'solom' && (game.hour >= 22 || game.hour < 5) && !c.isSleeping) {
-            statusText = "Nachtaktiv! Zoomies! ⚡";
+            statusText = "¡Activo de noche! ¡Zoomies! ⚡";
             sprite = '🐆';
         }
         document.getElementById(`status-${id}`).innerText = statusText;
