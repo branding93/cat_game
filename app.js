@@ -244,16 +244,41 @@ function updateUI() {
         // Sprite / Text Logic
         let statusText = c.isSleeping ? "Schläft tief und fest 💤" : "Ist wach und schaut sich um 👀";
         let sprite = c.isSleeping ? (id==='david'? '😴' : '💤') : (id==='david'? '🐈' : '🐈‍⬛');
+        let imageState = c.isSleeping ? 'sleep' : 'idle';
         
-        if (c.hunger < 30) { statusText = "Miaut laut vor Hunger! 😾"; sprite = '🙀'; }
-        else if (c.mood < 30) { statusText = "Ist schlecht gelaunt."; sprite = '😾'; }
+        if (c.hunger < 30) {
+            statusText = "Miaut laut vor Hunger! 😾";
+            sprite = '🙀';
+            imageState = 'hungry';
+        }
+        else if (c.mood < 30) {
+            statusText = "Ist schlecht gelaunt.";
+            sprite = '😾';
+            imageState = 'angry';
+        }
         
         if(id === 'solom' && (game.hour >= 22 || game.hour < 5) && !c.isSleeping) {
-            statusText = "Nachtaktiv! Zoomies! ⚡"; sprite = '🐆';
+            statusText = "Nachtaktiv! Zoomies! ⚡";
+            sprite = '🐆';
+            imageState = 'zoomies';
         }
 
         document.getElementById(`status-${id}`).innerText = statusText;
-        document.getElementById(`sprite-${id}`).innerText = sprite;
+
+        const spriteEl = document.getElementById(`sprite-${id}`);
+        const imagePath = `pics/${id}_${imageState}.png`;
+        spriteEl.dataset.expectedSrc = imagePath;
+
+        const testImage = new Image();
+        testImage.onload = function() {
+            if (spriteEl.dataset.expectedSrc !== imagePath) return;
+            spriteEl.innerHTML = `<img src="${imagePath}" alt="${c.name}" style="max-width: 100%; max-height: 96px; width: auto; height: auto; display: inline-block;" />`;
+        };
+        testImage.onerror = function() {
+            if (spriteEl.dataset.expectedSrc !== imagePath) return;
+            spriteEl.innerText = sprite;
+        };
+        testImage.src = imagePath;
     });
 }
 
