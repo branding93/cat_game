@@ -252,6 +252,56 @@ function playWith(id) {
     }
     updateUI();
 }
+function callCat(id) {
+    let c = cats[id];
+    let success = false;
+    let msg = "";
+    if (id === 'david') {
+        if (c.isSleeping) {
+            if (Math.random() < 0.3) {
+                success = true;
+                msg = "David se acerca somnoliento y se frota contra tu pierna.";
+            } else {
+                msg = "David mueve una oreja y se da la vuelta para seguir durmiendo.";
+            }
+        } else {
+            if (Math.random() < (c.mood / 100) * 0.7) {
+                success = true;
+                msg = "David se acerca curioso y maúlla suavemente.";
+            } else {
+                msg = "David te mira un momento y sigue acicalándose.";
+            }
+        }
+    }
+    if (id === 'solom') {
+        const isZoomies = (game.hour >= 22 || game.hour < 5) && c.energy > 50 && !c.isSleeping;
+        if (isZoomies) {
+            if (Math.random() < 0.1) {
+                success = true;
+                msg = "Solom se detiene en medio del sprint y te mira con curiosidad.";
+            } else {
+                msg = "¡Solom pasa como un rayo a tu lado — no tiene tiempo!";
+            }
+        } else {
+            if (Math.random() < (c.mood / 100) * 0.8) {
+                success = true;
+                msg = "¡Solom viene saltando de inmediato y ronronea como un motor!";
+            } else {
+                msg = "Solom levanta la cabeza un momento. Tiene cosas más importantes que hacer.";
+            }
+        }
+    }
+    if (success) {
+        c.mood = Math.min(100, c.mood + 5);
+        c.isSleeping = false;
+        setTemporaryVisualState(id, 'kommt', 2500);
+    } else {
+        c.mood = Math.max(0, c.mood - 3);
+        setTemporaryVisualState(id, 'ignoriert', 2000);
+    }
+    log(`${cats[id].name}: ${msg}`);
+    updateUI();
+}
 function setTemporaryVisualState(id, state, durationMs) {
     cats[id].visualState = state;
     cats[id].visualStateUntil = Date.now() + durationMs;
