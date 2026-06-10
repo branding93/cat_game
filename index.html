@@ -19,6 +19,15 @@
             <button id="btn-fast" onclick="setSpeed(10)">⏩ Rápido</button>
         </div>
     </header>
+    <div id="gameover-overlay" class="overlay hidden">
+        <div class="modal">
+            <h2>💔 Game Over</h2>
+            <p id="death-message"></p>
+            <p>🗓️ Días sobrevividos: <span id="survived-days"></span></p>
+            <p id="death-stats"></p>
+            <button class="action-btn" onclick="restartGame()" style="margin-top: 15px; padding: 10px 20px; font-size: 1rem;">🔄 Neues Spiel</button>
+        </div>
+    </div>
     <div class="dashboard">
         <div class="panel">
             <h2>🏠 Hogar</h2>

@@ -3,8 +3,9 @@ const game = {
     day: 1,
     hour: 8,
     minute: 0,
-    speed: 1, // 0 = Pause, 1 = Normal, 10 = Fast
-    loopId: null
+    speed: 1,
+    loopId: null,
+    status: 'playing'
 };
 const haushalt = {
     feeder: 8,
@@ -19,19 +20,21 @@ const cats = {
         name: "David",
         energy: 100, hunger: 100, mood: 100, fell: 100, weight: 5.0, activity: 0,
         baseWeight: 5.0, isSleeping: true, playChance: 0.2,
-        visualState: null, visualStateUntil: 0
+        visualState: null, visualStateUntil: 0,
+        hungerAtZeroSince: null
     },
     solom: {
         name: "Solom",
         energy: 100, hunger: 100, mood: 100, fell: 100, weight: 4.0, activity: 0,
-        baseWeight: 4.0, isSleeping: false, playChance: 0.9, claws: 100,
-        visualState: null, visualStateUntil: 0
+        baseWeight: 4.0, isSleeping: false, playChance: 0.9,
+        visualState: null, visualStateUntil: 0,
+        hungerAtZeroSince: null
     }
 };
 // --- 2. GAME LOOP (Die Zeit) ---
 function startGame() {
     if (game.loopId) clearInterval(game.loopId);
-    if (game.speed === 0) return;
+    if (game.speed === 0 || game.status === 'gameover') return;
     const tickRate = game.speed === 1 ? 1000 : 100; // 1 Sekunde = 1 Minute Ingame (Normal)
     game.loopId = setInterval(() => {
         game.minute++;
@@ -58,6 +61,7 @@ function setSpeed(speedMultiplier) {
 }
 // --- 3. LOGIK PRO TICK (Jede Minute) ---
 function onTick() {
+    if (game.status === 'gameover') return;
     // Haushalt
     haushalt.water = Math.max(0, haushalt.water - 0.05);
     // Katzen Needs
@@ -71,6 +75,8 @@ function onTick() {
         haushalt.sofaHealth = Math.max(0, haushalt.sofaHealth - 0.2);
         if (Math.random() < 0.05) log("⚠️ ¡Solom está arañando el sofá sin protección!");
     }
+    checkStarvation('david');
+    checkStarvation('solom');
 }
 function updateCatNeeds(id, energyDrain, hungerDrain) {
     let c = cats[id];
@@ -115,6 +121,67 @@ function handlePlayEffects(id, energyAmount) {
     reduceEnergyFromPlay(id, energyAmount);
     applyPlayWeightLoss(id, energyAmount);
 }
+function checkStarvation(id) {
+    const c = cats[id];
+    if (game.status === 'gameover') return;
+    if (c.hunger > 0) {
+        c.hungerAtZeroSince = null;
+        return;
+    }
+    if (c.hungerAtZeroSince === null) {
+        c.hungerAtZeroSince = game.day * 24 + game.hour;
+        log(`⚠️ ¡${c.name} tiene mucha hambre! ¡Necesita comer urgente!`);
+        return;
+    }
+    const currentTime = game.day * 24 + game.hour;
+    if (currentTime - c.hungerAtZeroSince >= 6) {
+        triggerGameOver(id);
+    }
+}
+function triggerGameOver(id) {
+    game.status = 'gameover';
+    setSpeed(0);
+    const c = cats[id];
+    document.getElementById('death-message').innerHTML = `💔 <strong>${c.name}</strong> ha fallecido de hambre después de <strong>${game.day}</strong> día${game.day !== 1 ? 's' : ''}.`;
+    document.getElementById('survived-days').innerText = game.day;
+    document.getElementById('death-stats').innerText = `${c.name} – Energía: ${Math.round(c.energy)} | Hambre: ${Math.round(c.hunger)} | Ánimo: ${Math.round(c.mood)} | Peso: ${c.weight.toFixed(2)}kg`;
+    document.getElementById('gameover-overlay').classList.remove('hidden');
+    log(`💔 ${c.name} ha fallecido.`);
+}
+function restartGame() {
+    document.getElementById('gameover-overlay').classList.add('hidden');
+    game.day = 1;
+    game.hour = 8;
+    game.minute = 0;
+    game.speed = 1;
+    game.status = 'playing';
+    game.loopId = null;
+    haushalt.feeder = 8;
+    haushalt.water = 100;
+    haushalt.litter = 0;
+    haushalt.blanketOn = true;
+    haushalt.sofaHealth = 100;
+    haushalt.scratchPost = 100;
+    cats.david = {
+        name: "David",
+        energy: 100, hunger: 100, mood: 100, fell: 100, weight: 5.0, activity: 0,
+        baseWeight: 5.0, isSleeping: true, playChance: 0.2,
+        visualState: null, visualStateUntil: 0,
+        hungerAtZeroSince: null
+    };
+    cats.solom = {
+        name: "Solom",
+        energy: 100, hunger: 100, mood: 100, fell: 100, weight: 4.0, activity: 0,
+        baseWeight: 4.0, isSleeping: false, playChance: 0.9,
+        visualState: null, visualStateUntil: 0,
+        hungerAtZeroSince: null
+    };
+    document.getElementById('log').innerHTML = '¡Bienvenido al simulador de gatos!';
+    document.querySelectorAll('.time-controls button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-normal').classList.add('active');
+    updateUI();
+    setSpeed(1);
+}
 // --- 4. EVENTS ---
 function onHourChange() {
     // Futterautomat (8x am Tag: 0, 3, 6, 9, 12, 15, 18, 21 Uhr)
@@ -137,6 +204,7 @@ function onHourChange() {
 }
 // --- 5. INTERAKTIONEN ---
 function feedCat(id, type) {
+    if (game.status === 'gameover') return;
     if (id === 'david' && type === 'nass') {
         log("David huele la comida húmeda y se da la vuelta con cara de desagrado.");
         cats.david.mood = Math.max(0, cats.david.mood - 10);
@@ -151,6 +219,7 @@ function feedCat(id, type) {
     updateUI();
 }
 function groomCat(id) {
+    if (game.status === 'gameover') return;
     if (cats[id].fell < 50) log(`El pelaje de ${cats[id].name} estaba enredado. Cepillarlo tomó bastante tiempo.`);
     cats[id].fell = 100;
     cats[id].mood = Math.min(100, cats[id].mood + 10);
@@ -158,6 +227,7 @@ function groomCat(id) {
     updateUI();
 }
 function petCat(id) {
+    if (game.status === 'gameover') return;
     if (id === 'david') {
         cats.david.mood = 100;
         cats.david.isSleeping = false;
@@ -176,6 +246,7 @@ function toggleBlanket() {
     updateUI();
 }
 function playWith(id) {
+    if (game.status === 'gameover') return;
     const toy = document.getElementById('toy-select').value;
     let success = false;
     let c = cats[id];
@@ -253,6 +324,7 @@ function playWith(id) {
     updateUI();
 }
 function callCat(id) {
+    if (game.status === 'gameover') return;
     let c = cats[id];
     let success = false;
     let msg = "";
@@ -383,6 +455,7 @@ function updateUI() {
         document.getElementById(`status-${id}`).innerText = statusText;
         renderCatSprite(id, visualState, sprite);
     });
+    document.querySelectorAll('.btn-group .action-btn').forEach(b => b.disabled = game.status === 'gameover');
 }
 // Init
 updateUI();
