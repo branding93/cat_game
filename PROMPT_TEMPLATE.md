@@ -1,6 +1,6 @@
 ## PROMPT_TEMPLATE – stabile KI-Änderungen (Kater-Tamagotchi)
 
-### Harte Regeln
+### Harte Regeln wichtig
 - **Nur die geforderten Änderungen durchführen.**
 - **Vanilla Stack bewahren:** Nur Vanilla HTML/CSS/JS nutzen. Keine Frameworks (React, Vue) oder Build-Tools einführen.
 - **Zentrale Logik nicht brechen:** Das game-Objekt (loopId, speed) und die globale updateUI() Funktion sind die Grundpfeiler. Sie dürfen nicht architektonisch umgebaut werden, es sei denn explizit verlangt.
